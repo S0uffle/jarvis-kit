@@ -9,17 +9,17 @@ set VENV_DIR=%SCRIPT_DIR%.venv
 
 echo === Jarvis Kit Setup ===
 
-REM Yeu cau: Python 3.13.x (version da test voi tat ca dependencies)
+REM Yeu cau: Python >= 3.13
 set REQUIRED_MAJOR=3
 set REQUIRED_MINOR=13
 
-REM Tim Python dung version: uu tien py -3.13 > python
+REM Tim Python: uu tien py launcher > python
 set PYTHON_CMD=
 
-REM Thu py launcher voi version cu the (Windows Python Launcher)
-py -%REQUIRED_MAJOR%.%REQUIRED_MINOR% --version >nul 2>&1
+REM Thu py launcher (Windows Python Launcher)
+py -3 --version >nul 2>&1
 if %errorlevel% equ 0 (
-    set PYTHON_CMD=py -%REQUIRED_MAJOR%.%REQUIRED_MINOR%
+    set PYTHON_CMD=py -3
     goto :found_python
 )
 
@@ -31,7 +31,7 @@ if %errorlevel% equ 0 (
 )
 
 echo ERROR: Khong tim thay Python.
-echo Cai Python %REQUIRED_MAJOR%.%REQUIRED_MINOR%.x tu https://www.python.org/downloads/
+echo Cai Python ^>= %REQUIRED_MAJOR%.%REQUIRED_MINOR% tu https://www.python.org/downloads/
 exit /b 1
 
 :found_python
@@ -39,22 +39,20 @@ for /f %%i in ('%PYTHON_CMD% -c "import sys; print(sys.version_info.minor)"') do
 for /f %%i in ('%PYTHON_CMD% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"') do set PYTHON_VERSION=%%i
 echo Dung: %PYTHON_CMD% (Python %PYTHON_VERSION%)
 
-if not "%PYTHON_MINOR%"=="%REQUIRED_MINOR%" (
-    echo.
-    echo WARNING: Yeu cau Python %REQUIRED_MAJOR%.%REQUIRED_MINOR%.x, ban dang dung %PYTHON_VERSION%.
-    echo Co the gap loi tuong thich packages.
-    echo.
-    echo Cach cai Python %REQUIRED_MAJOR%.%REQUIRED_MINOR% song song:
-    echo   Download tu https://www.python.org/downloads/
-    echo   Khi cai: check "Add to PATH" va "Install py launcher"
-    echo   Sau do chay lai setup.bat — script se tu dung py -%REQUIRED_MAJOR%.%REQUIRED_MINOR%
-    echo.
-    set /p answer=Tiep tuc voi Python %PYTHON_VERSION%? (y/n):
-    if not "!answer!"=="y" (
-        echo Huy setup.
-        exit /b 1
-    )
-)
+for /f %%i in ('%PYTHON_CMD% -c "import sys; print(sys.version_info.major)"') do set PYTHON_MAJOR=%%i
+if %PYTHON_MAJOR% LSS %REQUIRED_MAJOR% goto :version_too_old
+if %PYTHON_MAJOR% EQU %REQUIRED_MAJOR% if %PYTHON_MINOR% LSS %REQUIRED_MINOR% goto :version_too_old
+goto :version_ok
+
+:version_too_old
+echo.
+echo ERROR: Yeu cau Python ^>= %REQUIRED_MAJOR%.%REQUIRED_MINOR%, ban dang dung %PYTHON_VERSION%.
+echo.
+echo Download Python %REQUIRED_MAJOR%.%REQUIRED_MINOR% tro len tu https://www.python.org/downloads/
+echo Khi cai: check "Add to PATH" va "Install py launcher"
+exit /b 1
+
+:version_ok
 
 REM Tao venv
 if exist "%VENV_DIR%" (

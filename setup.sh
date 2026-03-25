@@ -9,13 +9,13 @@ VENV_DIR="$SCRIPT_DIR/.venv"
 
 echo "=== Jarvis Kit Setup ==="
 
-# Yêu cầu: Python 3.13.x (version đã test với tất cả dependencies)
+# Yêu cầu: Python >= 3.13
 REQUIRED_MAJOR=3
 REQUIRED_MINOR=13
 
-# Tìm Python đúng version: ưu tiên python3.13 > python3 > python
+# Tìm Python: ưu tiên python3 > python
 PYTHON_CMD=""
-for cmd in "python${REQUIRED_MAJOR}.${REQUIRED_MINOR}" "python3" "python"; do
+for cmd in "python3" "python"; do
     if command -v "$cmd" &> /dev/null; then
         PYTHON_CMD="$cmd"
         break
@@ -23,9 +23,9 @@ for cmd in "python${REQUIRED_MAJOR}.${REQUIRED_MINOR}" "python3" "python"; do
 done
 
 if [ -z "$PYTHON_CMD" ]; then
-    echo "ERROR: Không tìm thấy Python. Cài Python ${REQUIRED_MAJOR}.${REQUIRED_MINOR}.x trước."
+    echo "ERROR: Không tìm thấy Python. Cài Python >= ${REQUIRED_MAJOR}.${REQUIRED_MINOR} trước."
     echo ""
-    echo "Cách cài Python ${REQUIRED_MAJOR}.${REQUIRED_MINOR}:"
+    echo "Cách cài:"
     echo "  macOS:  brew install python@${REQUIRED_MAJOR}.${REQUIRED_MINOR}"
     echo "  Ubuntu: sudo apt install python${REQUIRED_MAJOR}.${REQUIRED_MINOR} python${REQUIRED_MAJOR}.${REQUIRED_MINOR}-venv"
     exit 1
@@ -36,21 +36,14 @@ PYTHON_MINOR=$($PYTHON_CMD -c "import sys; print(sys.version_info.minor)")
 PYTHON_VERSION="${PYTHON_MAJOR}.${PYTHON_MINOR}"
 echo "Dùng: $PYTHON_CMD (Python $PYTHON_VERSION)"
 
-if [ "$PYTHON_MAJOR" -ne "$REQUIRED_MAJOR" ] || [ "$PYTHON_MINOR" -ne "$REQUIRED_MINOR" ]; then
+if [ "$PYTHON_MAJOR" -lt "$REQUIRED_MAJOR" ] || { [ "$PYTHON_MAJOR" -eq "$REQUIRED_MAJOR" ] && [ "$PYTHON_MINOR" -lt "$REQUIRED_MINOR" ]; }; then
     echo ""
-    echo "WARNING: Yêu cầu Python ${REQUIRED_MAJOR}.${REQUIRED_MINOR}.x, bạn đang dùng ${PYTHON_VERSION}."
-    echo "Có thể gặp lỗi tương thích packages."
+    echo "ERROR: Yêu cầu Python >= ${REQUIRED_MAJOR}.${REQUIRED_MINOR}, bạn đang dùng ${PYTHON_VERSION}."
     echo ""
     echo "Cách cài Python ${REQUIRED_MAJOR}.${REQUIRED_MINOR} song song (không ảnh hưởng bản hiện tại):"
     echo "  macOS:  brew install python@${REQUIRED_MAJOR}.${REQUIRED_MINOR}"
     echo "  Ubuntu: sudo apt install python${REQUIRED_MAJOR}.${REQUIRED_MINOR} python${REQUIRED_MAJOR}.${REQUIRED_MINOR}-venv"
-    echo ""
-    echo "Tiếp tục với Python ${PYTHON_VERSION}? (y/n)"
-    read -r answer
-    if [ "$answer" != "y" ]; then
-        echo "Hủy setup. Cài Python ${REQUIRED_MAJOR}.${REQUIRED_MINOR}.x rồi chạy lại."
-        exit 1
-    fi
+    exit 1
 fi
 
 # Tạo venv

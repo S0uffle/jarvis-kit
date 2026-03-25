@@ -8,7 +8,7 @@
 |-----------|---------|
 | **VSCode** | https://code.visualstudio.com/ |
 | **Claude Code extension** | Mở VSCode → Extensions → tìm "Claude Code" → Install. Cần có subscription Claude. |
-| **Python 3.13** | macOS: `brew install python@3.13`  · Windows: [python.org/downloads](https://www.python.org/downloads/) (check "Add to PATH"). Cài song song, không ảnh hưởng bản Python hiện tại. |
+| **Python >= 3.13** | macOS: `brew install python@3.13`  · Windows: [python.org/downloads](https://www.python.org/downloads/) (check "Add to PATH") |
 | **gcloud CLI** | macOS: `brew install google-cloud-sdk` · Windows/Linux: https://cloud.google.com/sdk/docs/install |
 
 ## Bước 2: Mở Jarvis

@@ -17,9 +17,9 @@ Bất kỳ điều kiện nào sau đây:
 
 ### Bước 1: Check & cài Python
 
-1. Kiểm tra `python3.13` (hoặc `py -3.13` trên Windows) có sẵn không
-2. Nếu không có → kiểm tra `python3` / `python` version nào
-3. Nếu không phải 3.13 → **hướng dẫn user cài Python 3.13:**
+1. Kiểm tra `python3` (hoặc `py -3` trên Windows) có sẵn không
+2. Nếu có → kiểm tra version >= 3.13
+3. Nếu version < 3.13 → **hướng dẫn user cài Python >= 3.13:**
    - macOS: `brew install python@3.13`
    - Ubuntu: `sudo apt install python3.13 python3.13-venv`
    - Windows: download từ https://www.python.org/downloads/ → check "Add to PATH"
