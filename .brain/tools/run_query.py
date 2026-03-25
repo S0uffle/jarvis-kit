@@ -83,7 +83,7 @@ def run_query(query: str, output_path: str = None, project: str = None):
         sys.exit(1)
 
     # Lưu query vào temp file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.sql', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.sql', delete=False, encoding='utf-8') as f:
         f.write(query)
         query_file = f.name
 
@@ -95,6 +95,10 @@ def run_query(query: str, output_path: str = None, project: str = None):
         print("Dùng --project hoặc set env var JARVIS_BQ_PROJECT.")
         sys.exit(1)
 
+    # Convert backslashes to forward slashes for safe embedding in generated script (Windows compat)
+    safe_query_file = query_file.replace("\\", "/")
+    safe_output_path = (output_path or "").replace("\\", "/")
+
     executor_script = f'''
 import warnings
 import sys
@@ -104,7 +108,7 @@ warnings.filterwarnings('ignore', message='Your application has authenticated us
 warnings.filterwarnings('ignore', message='Unable to find acceptable character detection dependency')
 
 # Read query from file
-with open("{query_file}", "r") as f:
+with open("{safe_query_file}", "r", encoding="utf-8") as f:
     query = f.read()
 
 from google.cloud import bigquery
@@ -114,7 +118,7 @@ try:
     client = bigquery.Client(project="{bq_project}")
     df = client.query(query).to_dataframe()
 
-    output_path = "{output_path or ""}"
+    output_path = "{safe_output_path}"
 
     if output_path:
         # Output dài: save to CSV
@@ -129,7 +133,7 @@ except Exception as e:
 '''
 
     # Lưu script vào temp file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False, encoding='utf-8') as f:
         f.write(executor_script)
         script_file = f.name
 

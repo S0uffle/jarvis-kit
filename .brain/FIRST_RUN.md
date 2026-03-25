@@ -62,7 +62,6 @@ Dùng Project ID user cung cấp để:
 
 **KHÔNG làm những việc sau ở bước này** (chuyển sang "Update Context"):
 - ~~Tạo app context~~
-- ~~Set env var JARVIS_BQ_PROJECT~~
 - ~~Discovery schema chi tiết~~
 
 ### Bước 6: Verify
