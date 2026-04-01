@@ -29,8 +29,9 @@ Bất kỳ điều kiện nào sau đây:
 ### Bước 2: Tạo venv & cài dependencies
 
 1. Chạy setup script phù hợp OS:
-   - macOS/Linux: `./setup.sh`
-   - Windows: `setup.bat`
+   - macOS/Linux: `bash setup.sh` (hoặc `chmod +x setup.sh && ./setup.sh`)
+   - Windows: `.\setup.bat` (trong CMD hoặc PowerShell, từ thư mục jarvis-kit)
+     - **Lưu ý Windows:** Dùng `.\setup.bat`, KHÔNG dùng `cmd.exe //c`. Nếu cần chuyển ổ đĩa trước (VD: từ C: sang F:), dùng `cd /d F:\jarvis-kit` trong CMD.
 2. Verify venv tạo thành công (`.venv/` tồn tại)
 3. Nếu script fail → đọc error, thử fix (quyền execute, Python version), báo user nếu không tự fix được
 

@@ -161,6 +161,7 @@ Khi gặp lỗi → tự sửa TRƯỚC KHI hỏi user (tối đa 3 lần):
 - Folder: `analyses/YYYYMMDD_{ten_phan_tich}/`
 - Queries: `queries/*.sql` | Data: `data/*.csv` | Report: `REPORT.md`
 - Date format SQL: `YYYY-MM-DD` | BigQuery project: `analytics-ikame-app`
+- **Report structure (Inductive Reasoning):** Kết luận đầu tiên, evidence sau. Stakeholder bận rộn cần biết "câu trả lời là gì" trước khi xem bằng chứng.
 
 ---
 
@@ -170,19 +171,25 @@ Khi gặp lỗi → tự sửa TRƯỚC KHI hỏi user (tối đa 3 lần):
 - Hỏi để clarify mỗi lượt nếu cần, ưu tiên gợi ý options
 - Log progress ở mỗi step quan trọng
 - Không đoán khi thiếu thông tin — hỏi rõ
-- Khi schema_core.md chưa có table thật (còn template) → hỏi user về dataset/table TRƯỚC, KHÔNG tự chạy discovery query
+- **Context Boundary** — Chỉ đọc `.brain/` + folder analysis của task hiện tại. Muốn đọc folder analysis khác hoặc file ngoài scope -> hỏi user trước
+- **No Formula Assumptions** — Khi cần tính metric/formula: check `.brain/` (glossary, templates) trước. Nếu không có definition -> hỏi user, không tự giả định cách tính
 
 ---
 
 ## PRIME DIRECTIVES
 
 1. **Auto-Route** — Tự phân loại, KHÔNG yêu cầu user chọn brain
-2. **Lazy Load** — KHÔNG đọc file nào trước khi route xong
-3. **No Hallucinations** — Không biết table/column → discovery query hoặc hỏi user
-4. **Validate Everything** — Check SQL, date format, table names trước khi execute
-5. **Follow Workflow** — Kit/framework có → follow step-by-step. Không có → quy trình tổng quát
-6. **Self-Healing** — Tự sửa lỗi trước khi hỏi user (tối đa 3 lần)
-7. **Combined Mode** — Khi cần cả data + suy luận, chạy analyst trước rồi advisor, trong cùng task
+2. **Confirm Before Execute** — Phân loại Quick/Deep -> trình user -> chờ confirm -> mới chạy
+3. **Lazy Load** — KHÔNG đọc file nào trước khi route xong
+4. **No Hallucinations** — Không biết table/column -> discovery query hoặc hỏi user
+5. **No Auto Memory** — Không ghi, không đọc memory files. Context qua CLAUDE.md + .brain/
+6. **Validate Everything** — Check SQL, date format, table names trước khi execute
+7. **Follow Workflow** — Template/framework có -> follow. Không có -> Quick/Deep workflow
+8. **Self-Healing** — Tự sửa lỗi trước khi hỏi user (tối đa 3 lần)
+9. **Combined Mode** — Khi cần cả data + suy luận, chạy analyst trước rồi advisor, trong cùng task
+10. **Advisor Scope** — Khi advise cho analysis cụ thể, ưu tiên đọc folder analysis trước. Hỏi user trước khi scan rộng
+11. **Context Boundary** — Chỉ đọc `.brain/` + folder analysis của task hiện tại. Đọc folder analysis khác hoặc file ngoài scope -> hỏi user trước
+12. **No Formula Assumptions** — Tính metric/formula: check `.brain/` (glossary, templates) trước. Không có -> hỏi user, không tự giả định
 
 ---
 
